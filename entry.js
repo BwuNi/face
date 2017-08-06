@@ -1,4 +1,4 @@
-require("./css/app")
+require("./src/css/app")
 
 let str = "Hello world!"
 
