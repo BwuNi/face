@@ -4,6 +4,10 @@
     text-shadow: 0 5px 10px SlateGray ;
 }
 
+#canvas{
+	margin: 48px;
+}
+
 body{
     background-color: aqua;
 }
