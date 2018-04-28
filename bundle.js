@@ -81,7 +81,7 @@ exports.default = function (canvas) {
     if (!canvas.getContext) return;
 
     var img = new Image(); // 创建一个<img>元素
-    img.src = './static/doge.jpg'; // 设置图片源地址
+    img.src = './static/timg.jpg'; // 设置图片源地址
 
     img.onload = function () {
         imgload(canvas, img);
@@ -125,9 +125,9 @@ function imgload(canvas, img) {
 
     ctx.putImageData(imageData, 0, 0);
 
-    var chars = ['缝', '辔', '翻', '叠', '意'];
+    var chars = ['0', '1', '2', '3', '4'];
     sml.forEach(function (v, i) {
-        DomHtml += '<span style="color:rgb(' + v + ',' + v + ',' + v + ')">' + chars[Math.floor(Math.random() * chars.length)] + '</span>';
+        DomHtml += '<span style="color:rgb(' + v + ',' + v + ',' + v + ')">' + chars[Math.floor(Math.random() * chars.length)] + chars[Math.floor(Math.random() * chars.length)] + '</span>';
         if ((i + 1) % (width / multiplying) == 0) DomHtml += '<br>';
     });
     console.log(gray);
@@ -238,7 +238,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "#app{\r\n    color: #ffffff;\r\n    font-size: 64px;\r\n    text-shadow: 0 5px 10px SlateGray ;\r\n}\r\n\r\n#canvas{\r\n\tmargin: 48px;\r\n}\r\n\r\nbody{\r\n    background-color: aqua;\r\n}", ""]);
+exports.push([module.i, "#app{\r\n    color: #ffffff;\r\n    font-size: 64px;\r\n    /* text-shadow: 0 5px 10px SlateGray ; */\r\n}\r\n\r\n#canvas{\r\n\tmargin: 48px;\r\n}\r\n/* \r\nbody{\r\n    background-color: aqua;\r\n} */", ""]);
 
 // exports
 

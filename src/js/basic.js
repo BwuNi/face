@@ -3,7 +3,7 @@ export default function(canvas) {
 
 
     var img = new Image(); // 创建一个<img>元素
-    img.src = './static/doge.jpg'; // 设置图片源地址
+    img.src = './static/timg.jpg'; // 设置图片源地址
 
     img.onload = function() {
         imgload(canvas, img)
@@ -53,9 +53,9 @@ function imgload(canvas, img) {
 
     ctx.putImageData(imageData, 0, 0)
 
-    const chars = ['缝','辔','翻','叠','意']
+    const chars = ['0','1','2','3','4']
     sml.forEach((v, i) => {
-        DomHtml += `<span style="color:rgb(${v},${v},${v})">${chars[Math.floor(Math.random() *chars.length)]}</span>`
+        DomHtml += `<span style="color:rgb(${v},${v},${v})">${chars[Math.floor(Math.random() *chars.length)]}${chars[Math.floor(Math.random() *chars.length)]}</span>`
         if ((i + 1) % (width / multiplying) == 0) DomHtml += '<br>'
     })
     console.log(gray)
