@@ -63,17 +63,128 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (canvas) {
+    if (!canvas.getContext) return;
+
+    var img = new Image(); // 创建一个<img>元素
+    img.src = './static/doge.jpg'; // 设置图片源地址
+
+    img.onload = function () {
+        imgload(canvas, img);
+    };
+    //    ctx.putImageData(imageData, 0, 0);
+};
+
+function imgload(canvas, img) {
+
+    var ctx = canvas.getContext('2d'),
+        width = canvas.width,
+        height = canvas.height;
+
+    ctx.drawImage(img, 0, 0, width, height);
+
+    var imageData = ctx.getImageData(0, 0, height, width),
+        data = imageData.data;
+
+    var DomHtml = '';
+
+    var multiplying = 4;
+
+    //Gray = R*0.299 + G*0.587 + B*0.114
+
+    var gray = [];
+
+    for (var i = 0; i < data.length; i += 4) {
+
+        gray.push(Math.round((data[i] * 299 + data[i + 1] * 587 + data[i + 2] * 114) / 1000));
+
+        data[i] = data[i + 1] = data[i + 2] = Math.round((data[i] * 299 + data[i + 1] * 587 + data[i + 2] * 114) / 1000);
+    }
+
+    var sml = fromCtx(multiplying, width, height, gray),
+        lag = toCtx(multiplying, width, height, sml);
+
+    lag.forEach(function (v, i) {
+        var first = i * 4;
+        data[first] = data[first + 1] = data[first + 2] = v;
+    });
+
+    ctx.putImageData(imageData, 0, 0);
+
+    var chars = ['缝', '辔', '翻', '叠', '意'];
+    sml.forEach(function (v, i) {
+        DomHtml += '<span style="color:rgb(' + v + ',' + v + ',' + v + ')">' + chars[Math.floor(Math.random() * chars.length)] + '</span>';
+        if ((i + 1) % (width / multiplying) == 0) DomHtml += '<br>';
+    });
+    console.log(gray);
+    document.getElementById('app').style.fontSize = '12px';
+    document.getElementById('app').style.lineHeight = '12px';
+    document.getElementById('app').innerHTML = DomHtml;
+}
+
+function toCtx(multiplying, w, h, arr) {
+    var _w = w / multiplying,
+        _h = h / multiplying;
+
+    var res = new Array(w * h);
+
+    arr.forEach(function (v, i) {
+        for (var x = 0; x < multiplying; x++) {
+            for (var y = 0; y < multiplying; y++) {
+
+                var first = (i - i % _w) * multiplying ** 2 + i % _w * multiplying;
+                res[first + x + y * w] = v;
+            }
+        }
+    });
+
+    return res;
+}
+
+function fromCtx(multiplying, w, h, arr) {
+    var _w = w / multiplying,
+        _h = h / multiplying;
+
+    var res = new Array(w * h / multiplying ** 2).fill(0).map(function (v, i) {
+        var first = (i - i % _w) * multiplying ** 2 + i % _w * multiplying;
+
+        var count = 0,
+            value = 0;
+
+        for (var x = 0; x < multiplying; x++) {
+            for (var y = 0; y < multiplying; y++) {
+                count++;
+                value += arr[first + x + y * w];
+            }
+        }
+        return Math.floor(value / count);
+    });
+
+    return res;
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(2);
+var content = __webpack_require__(3);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -81,14 +192,14 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(5)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js!./app.css", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js!./app.css");
+		module.hot.accept("!!../../node_modules/css-loader/index.js!./app.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!./app.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -98,34 +209,42 @@ if(false) {
 }
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(0);
+__webpack_require__(1);
+
+var _basic = __webpack_require__(0);
+
+var _basic2 = _interopRequireDefault(_basic);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var str = "Hello world!";
 
 document.getElementById("app").innerHTML = str;
 
+(0, _basic2.default)(document.getElementById("canvas"));
+
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(3)(undefined);
+exports = module.exports = __webpack_require__(4)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, "#app{\r\n    color: #ffffff;\r\n    font-size: 64px;\r\n    text-shadow: 0 5px 10px salmon ;\r\n}\r\n\r\nbody{\r\n    background-color: #66ccff;\r\n}", ""]);
+exports.push([module.i, "#app{\r\n    color: #ffffff;\r\n    font-size: 64px;\r\n    text-shadow: 0 5px 10px SlateGray ;\r\n}\r\n\r\n#canvas{\r\n\tmargin: 48px;\r\n}\r\n\r\nbody{\r\n    background-color: aqua;\r\n}", ""]);
 
 // exports
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 /*
@@ -207,7 +326,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -253,7 +372,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(5);
+var	fixUrls = __webpack_require__(6);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -314,14 +433,13 @@ function addStylesToDom (styles, options) {
 		if(domStyle) {
 			domStyle.refs++;
 
-			for(var j = 0; j < domStyle.parts.length && item.parts.length; j++) {
+			for(var j = 0; j < domStyle.parts.length; j++) {
 				domStyle.parts[j](item.parts[j]);
-				domStyle.parts.push(addStyle(item.parts[j], options));
 			}
 
-			// for(; j < item.parts.length; j++) {
-			// 	domStyle.parts.push(addStyle(item.parts[j], options));
-			// }
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
 		} else {
 			var parts = [];
 
@@ -379,10 +497,10 @@ function insertStyleElement (options, style) {
 }
 
 function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
 	style.parentNode.removeChild(style);
 
 	var idx = stylesInsertedAtTop.indexOf(style);
-
 	if(idx >= 0) {
 		stylesInsertedAtTop.splice(idx, 1);
 	}
@@ -567,7 +685,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 
